@@ -14,15 +14,11 @@ const geistMono = Geist_Mono({
 
 // --- UPDATE THIS SECTION ---
 export const metadata: Metadata = {
-  // 1. Update the Title
-  title: "Cyber Intelligence Academy", 
-  
-  // 2. Add the Description (optional)
+  title: "Cyber Intelligence Academy",
   description: "Official portal for the Cyber Intelligence Academy",
-  
-  // 3. Add the Logo (Favicon)
   icons: {
-    icon: '/logo.png', // This looks for logo.png in your 'public' folder
+    // Make sure this matches the file name in your 'public' folder exactly
+    icon: '/logo.svg', 
   },
 };
 // ---------------------------
