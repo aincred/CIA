@@ -14,10 +14,10 @@ import {
   Terminal,
   Activity,
   Printer,
-  Download,
   ArrowLeft,
   Cpu,
-  Calendar // Import Calendar Icon
+  Calendar,
+  Layers // Added Layers Icon for Course Section
 } from 'lucide-react';
 
 // --- CONSTANTS ---
@@ -31,9 +31,6 @@ const WaveBackground = () => {
 
   return (
     <>
-      {/* FIX: Using dangerouslySetInnerHTML avoids the TypeScript error 
-         with 'jsx' and 'global' attributes on the style tag.
-      */}
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes move_wave {
           0% { transform: translateX(0) translateZ(0) scaleY(1); }
@@ -132,7 +129,7 @@ const WaveBackground = () => {
             input, select, textarea { border: 1px solid #ccc !important; color: black !important; background: white !important; }
         }
       `}} />
-       
+        
       <div className="waveWrapper waveAnimation">
         <div className="waveWrapperInner bgTop">
           <div className="wave waveTop" style={{ backgroundImage: `url("${waveSvg}")`, opacity: 0.1 }}></div>
@@ -165,6 +162,7 @@ interface FormDataType {
   semester: string;
   marks: string;
   bloodGroup: string;
+  selectedCourse: string; // --- ADDED ---
   paymentMethod: string;
   paymentDate: string;
   receiptNo: string;
@@ -238,13 +236,20 @@ const ReceiptView = ({ data, onBack }: { data: FormDataType; onBack: () => void 
                         </div>
                     </div>
 
-                    <div>
-                        <h3 className="font-bold border-b border-gray-300 pb-2 mb-3 text-sm uppercase text-slate-700">Academic Details</h3>
-                        <div className="space-y-2 text-sm text-slate-800">
-                            <p><span className="font-semibold w-28 inline-block text-slate-600">College:</span> {data.college}</p>
-                            <p><span className="font-semibold w-28 inline-block text-slate-600">Year:</span> {data.passoutYear}</p>
-                            <p><span className="font-semibold w-28 inline-block text-slate-600">Semester:</span> {data.semester}</p>
-                            <p><span className="font-semibold w-28 inline-block text-slate-600">Marks:</span> {data.marks}</p>
+                    <div className="flex flex-col gap-6">
+                        <div>
+                            <h3 className="font-bold border-b border-gray-300 pb-2 mb-3 text-sm uppercase text-slate-700">Academic Details</h3>
+                            <div className="space-y-2 text-sm text-slate-800">
+                                <p><span className="font-semibold w-28 inline-block text-slate-600">College:</span> {data.college}</p>
+                                <p><span className="font-semibold w-28 inline-block text-slate-600">Year:</span> {data.passoutYear}</p>
+                                <p><span className="font-semibold w-28 inline-block text-slate-600">Semester:</span> {data.semester}</p>
+                            </div>
+                        </div>
+
+                         {/* --- ADDED PROGRAM SECTION --- */}
+                         <div className="bg-cyan-50 p-4 rounded border border-cyan-100">
+                            <h3 className="font-bold text-xs uppercase text-cyan-800 mb-1">Program Applied For</h3>
+                            <p className="font-bold text-lg text-slate-900">{data.selectedCourse || "Not Selected"}</p>
                         </div>
                     </div>
                 </div>
@@ -292,6 +297,7 @@ export default function CyberRegistrationPage() {
     fullName: '', gender: '', dob: '', guardianType: 'Father', guardianName: '',
     studentContact: '', whatsappContact: '', email: '', permAddress: '', tempAddress: '',
     college: '', passoutYear: '', semester: '', marks: '', bloodGroup: '',
+    selectedCourse: '', // --- INIT ---
     paymentMethod: 'Cash', paymentDate: '', receiptNo: ''
   });
 
@@ -338,7 +344,15 @@ export default function CyberRegistrationPage() {
       {/* NAVBAR */}
       <nav className={`fixed w-full z-50 transition-all duration-500 ${scrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/5 py-4' : 'bg-transparent py-6'}`}>
         <div className="container mx-auto px-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
+            
+            {/* --- ADDED BACK BUTTON START --- */}
+            <a href="/" className="group flex items-center gap-2 pr-4 border-r border-white/10 text-slate-400 hover:text-cyan-400 transition-colors">
+                 <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                 <span className="hidden sm:inline text-xs font-bold tracking-widest uppercase">Home</span>
+            </a>
+            {/* --- ADDED BACK BUTTON END --- */}
+
             <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center shadow-lg shadow-cyan-600/20 border border-white/10 overflow-hidden">
                <img 
                   src={LOGO_URL} 
@@ -533,13 +547,42 @@ export default function CyberRegistrationPage() {
                 </div>
               </section>
 
+              {/* --- NEW SECTION: PROGRAM SELECTION --- */}
+              <section className="relative">
+                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
+                  <Layers className="text-cyan-500 w-5 h-5" /> 
+                  <span className="border-b border-cyan-500/30 pb-1">05. Program Selection</span>
+                </h3>
+                <div className="grid grid-cols-1 gap-6">
+                  <div>
+                    <label htmlFor="selectedCourse" className={labelClass}>13. Select Training Module</label>
+                    <select 
+                        name="selectedCourse" 
+                        id="selectedCourse" 
+                        required 
+                        className={inputClass} 
+                        value={formData.selectedCourse} 
+                        onChange={handleChange}
+                    >
+                      <option value="" className="bg-slate-900">Select a Course...</option>
+                      <option value="Cybersecurity Fundamentals" className="bg-slate-900">Cybersecurity Fundamentals (Beginner)</option>
+                      <option value="VAPT / Ethical Hacking" className="bg-slate-900">VAPT / Ethical Hacking (Advanced)</option>
+                      <option value="IS Audit & Compliance" className="bg-slate-900">IS Audit & Compliance (Intermediate)</option>
+                      <option value="Workshops & Awareness" className="bg-slate-900">Workshops & Awareness (All Levels)</option>
+                    </select>
+                  </div>
+                </div>
+              </section>
+
+              {/* --- RENAMED TO SECTION 06 --- */}
               <section className="bg-cyan-950/20 p-6 rounded-xl border border-cyan-500/20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 p-4 opacity-10">
                     <Cpu size={100} className="text-cyan-500" />
                 </div>
                   <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3 relative z-10">
                   <Activity className="text-cyan-500 w-5 h-5" /> 
-                  <span className="border-b border-cyan-500/30 pb-1">05. Transaction Logs (Office Use)</span>
+                  <span className="border-b border-cyan-500/30 pb-1">06. Transaction Logs (Office Use)</span>
                 </h3>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
@@ -554,7 +597,7 @@ export default function CyberRegistrationPage() {
                   
                   {/* Calendar Icon for Payment Date */}
                   <div>
-                    <label htmlFor="paymentDate" className={labelClass}>13. Payment Date</label>
+                    <label htmlFor="paymentDate" className={labelClass}>15. Payment Date</label>
                     <div className="relative">
                       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 z-20">
                           <Calendar className="h-4 w-4 text-slate-500" />
@@ -571,7 +614,7 @@ export default function CyberRegistrationPage() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label htmlFor="receiptNo" className={labelClass}>15. Transaction Hash / Receipt ID</label>
+                    <label htmlFor="receiptNo" className={labelClass}>16. Transaction Hash / Receipt ID</label>
                     <input type="text" name="receiptNo" id="receiptNo" className={`${inputClass} font-mono tracking-wider`} placeholder="TX-2025-XXXX-HASH" value={formData.receiptNo} onChange={handleChange} />
                   </div>
                 </div>
