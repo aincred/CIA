@@ -313,7 +313,7 @@ const HackerBackground = () => {
         >
         </div>
         {/* Scanlines Overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%] pointer-events-none z-10" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-size-[100%_2px,3px_100%] pointer-events-none z-10" />
     </div>
   );
 };
@@ -329,7 +329,7 @@ export default function LoginPage() {
       <HackerBackground />
 
       {/* Main Login Container */}
-      <div className="w-full max-w-[420px] px-6 relative z-10">
+      <div className="w-full max-w-105 px-6 relative z-10">
         
         {/* Logo Section */}
         <div className="flex flex-col items-center mb-8 animate-fade-in-up">
@@ -401,7 +401,7 @@ export default function LoginPage() {
               <a href="#" className="text-cyan-500 hover:text-cyan-400 transition-colors hover:underline">Forgot passcode?</a>
             </div>
 
-            <button type="button" className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-cyan-900/20 hover:shadow-cyan-900/40 transition-all hover:-translate-y-0.5 active:translate-y-0 text-sm tracking-wide">
+            <button type="button" className="w-full bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-lg shadow-lg shadow-cyan-900/20 hover:shadow-cyan-900/40 transition-all hover:-translate-y-0.5 active:translate-y-0 text-sm tracking-wide">
               AUTHENTICATE
             </button>
           </form>

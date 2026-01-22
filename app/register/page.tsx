@@ -386,7 +386,7 @@ export default function CyberRegistrationPage() {
                 New Batch Enrollment Open
              </div>
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-              Student <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-white">Registration Protocol</span>
+              Student <span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-blue-500 to-white">Registration Protocol</span>
             </h1>
             <p className="text-slate-400 max-w-2xl mx-auto">
               Complete the secure intake form below to begin your journey into offensive and defensive cybersecurity operations.
@@ -394,7 +394,7 @@ export default function CyberRegistrationPage() {
           </div>
 
           <div className="relative rounded-2xl bg-slate-900/60 backdrop-blur-md border border-cyan-500/20 shadow-2xl shadow-cyan-900/10 overflow-hidden">
-            <div className="h-1 w-full bg-gradient-to-r from-cyan-600 via-blue-800 to-black"></div>
+            <div className="h-1 w-full bg-linear-to-r from-cyan-600 via-blue-800 to-black"></div>
             
             <div className="bg-black/40 border-b border-white/5 px-6 py-4 flex items-center justify-between">
               <h2 className="text-white font-bold flex items-center gap-3">
@@ -410,7 +410,7 @@ export default function CyberRegistrationPage() {
             <form onSubmit={handleSubmit} className="p-6 sm:p-10 space-y-10">
               
               <section className="relative">
-                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-cyan-600/50 to-transparent -ml-2"></div>
                 <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
                   <User className="text-cyan-500 w-5 h-5" /> 
                   <span className="border-b border-cyan-500/30 pb-1">01. Identity Verification</span>
@@ -460,7 +460,7 @@ export default function CyberRegistrationPage() {
               </section>
 
               <section className="relative">
-                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-cyan-600/50 to-transparent -ml-2"></div>
                 <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
                   <Phone className="text-cyan-500 w-5 h-5" /> 
                   <span className="border-b border-cyan-500/30 pb-1">02. Communication Protocols</span>
@@ -500,7 +500,7 @@ export default function CyberRegistrationPage() {
               </section>
 
               <section className="relative">
-                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-cyan-600/50 to-transparent -ml-2"></div>
                   <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
                   <Users className="text-cyan-500 w-5 h-5" /> 
                   <span className="border-b border-cyan-500/30 pb-1">03. Next of Kin / Guardian</span>
@@ -522,7 +522,7 @@ export default function CyberRegistrationPage() {
               </section>
 
               <section className="relative">
-                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-cyan-600/50 to-transparent -ml-2"></div>
                 <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
                   <BookOpen className="text-cyan-500 w-5 h-5" /> 
                   <span className="border-b border-cyan-500/30 pb-1">04. Educational Background</span>
@@ -549,7 +549,7 @@ export default function CyberRegistrationPage() {
 
               {/* --- NEW SECTION: PROGRAM SELECTION --- */}
               <section className="relative">
-                <div className="absolute left-0 top-0 h-full w-[1px] bg-gradient-to-b from-cyan-600/50 to-transparent -ml-2"></div>
+                <div className="absolute left-0 top-0 h-full w-px bg-linear-to-b from-cyan-600/50 to-transparent -ml-2"></div>
                 <h3 className="text-white font-bold text-lg mb-6 flex items-center gap-3">
                   <Layers className="text-cyan-500 w-5 h-5" /> 
                   <span className="border-b border-cyan-500/30 pb-1">05. Program Selection</span>
@@ -624,7 +624,7 @@ export default function CyberRegistrationPage() {
                 <button
                   type="submit"
                   disabled={submitted}
-                  className="group w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-lg shadow-cyan-500/20 text-sm font-bold uppercase tracking-widest text-white bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group w-full flex justify-center py-4 px-4 border border-transparent rounded-lg shadow-lg shadow-cyan-500/20 text-sm font-bold uppercase tracking-widest text-white bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-cyan-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submitted ? (
                       <span className="flex items-center gap-2">
