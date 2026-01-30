@@ -273,7 +273,7 @@ export default function AdminLogin() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-900/40 flex items-center justify-center gap-2 group transition-all active:scale-95 disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-900/40 flex items-center justify-center gap-2 group transition-all active:scale-95 disabled:opacity-50"
             >
               {isLoading ? (
                 <div className="flex items-center gap-2 font-mono text-sm">
