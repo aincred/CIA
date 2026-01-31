@@ -38,24 +38,23 @@ export const admins = pgTable('admins', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-
 export const registrations = pgTable('registrations', {
-  id: serial('id').primaryKey(), // Auto-incrementing ID for the Batch Sequence
+  id: serial('id').primaryKey(),
   
   // Personal Details
   fullName: text('full_name').notNull(),
   parentName: text('parent_name').notNull(),
   dob: text('dob').notNull(),
   gender: text('gender').notNull(),
-  aadhaarLast4: text('aadhaar_last_4').notNull(),
+  aadhaarLast4: text('aadhaar_last4').notNull(),
   studentContact: text('student_contact').notNull(),
   parentContact: text('parent_contact').notNull(),
   email: text('email').notNull(),
   address: text('address').notNull(),
-  
-  // Storing images as Base64 strings for simplicity in this guide. 
-  // For production, use AWS S3 or Vercel Blob and store the URL here instead.
-  photoBase64: text('photo_base64'), 
+
+  // Files (Stored as Base64 Text)
+  photoBase64: text('photo_base64'),
+  signatureBase64: text('signature_base64'),
 
   // Academic Details
   collegeName: text('college_name').notNull(),
@@ -65,26 +64,27 @@ export const registrations = pgTable('registrations', {
   collegeIdNo: text('college_id_no').notNull(),
   cgpa: text('cgpa').notNull(),
 
-  // Documents (Boolean flags)
+  // Document Checklist (Booleans)
   docAadhaar: boolean('doc_aadhaar').default(false),
   docCollegeId: boolean('doc_college_id').default(false),
   docNoc: boolean('doc_noc').default(false),
-  docPayment: boolean('doc_payment').default(false),
   docPhoto: boolean('doc_photo').default(false),
+  docPayment: boolean('doc_payment').default(false),
 
-  // Fee Details
-  feeAmount: text('fee_amount').notNull(),
-  installmentType: text('installment_type').notNull(),
-  paymentMode: text('payment_mode').notNull(),
-  transactionId: text('transaction_id').notNull(),
-  paymentDate: text('payment_date').notNull(),
+  // Payment Details (Nullable)
+  feeAmount: text('fee_amount'),
+  installmentType: text('installment_type'),
+  paymentMode: text('payment_mode'),
+  transactionId: text('transaction_id'),
+  paymentDate: text('payment_date'),
 
-  // Declaration
+  // Declaration & Admin Codes
   agreedToTerms: boolean('agreed_to_terms').default(false),
-  signatureBase64: text('signature_base64'),
   declarationDate: text('declaration_date'),
   
-  // Metadata
-  batchCode: text('batch_code'), // We will generate this on the server
+  // Generated Codes (Nullable initially, filled after insert)
+  batchCode: text('batch_code'),
+  registrationNo: text('registration_no'), // <--- THIS WAS MISSING
+  
   createdAt: timestamp('created_at').defaultNow(),
 });

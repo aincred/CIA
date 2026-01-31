@@ -5,15 +5,19 @@ import {
   Users, Search, Filter, MoreVertical, Eye, X,
   ShieldCheck, GraduationCap, CreditCard, AlertCircle, 
   Download, Terminal, FileText, Loader2, User, Phone,
-  Calendar, MapPin, CheckCircle, Smartphone
+  Calendar, MapPin, CheckCircle, Smartphone, Edit2, Save
 } from 'lucide-react';
-import * as XLSX from 'xlsx'; // Import the library
+import * as XLSX from 'xlsx';
 
 export default function PolytechnicAdminDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [registrations, setRegistrations] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
+
+  // --- NEW STATES FOR EDITING (BATCH & REG NO) ---
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ batchCode: '', registrationNo: '' });
 
   // 1. FETCH DATA
   useEffect(() => {
@@ -33,13 +37,52 @@ export default function PolytechnicAdminDashboard() {
     fetchData();
   }, []);
 
-  // 2. EXCEL EXPORT FUNCTION
+  // --- RESET EDIT STATE WHEN MODAL OPENS ---
+  useEffect(() => {
+    if (selectedStudent) {
+      setEditForm({
+        batchCode: selectedStudent.batchCode || '',
+        registrationNo: selectedStudent.registrationNo || ''
+      });
+      setIsEditing(false);
+    }
+  }, [selectedStudent]);
+
+  // --- SAVE FUNCTION (BATCH + REG NO) ---
+  const handleSaveDetails = () => {
+    if (!selectedStudent) return;
+
+    // 1. Update the main list
+    const updatedRegistrations = registrations.map(reg => 
+      reg.id === selectedStudent.id ? { 
+        ...reg, 
+        batchCode: editForm.batchCode,
+        registrationNo: editForm.registrationNo 
+      } : reg
+    );
+    setRegistrations(updatedRegistrations);
+
+    // 2. Update the currently selected modal view
+    setSelectedStudent({ 
+      ...selectedStudent, 
+      batchCode: editForm.batchCode,
+      registrationNo: editForm.registrationNo 
+    });
+
+    // 3. Close edit mode
+    setIsEditing(false);
+
+    // TODO: Add API call here
+    // await fetch('/api/update-student', { method: 'POST', body: JSON.stringify(editForm) })
+  };
+
+  // 2. EXCEL EXPORT FUNCTION (UPDATED)
   const handleExportExcel = () => {
-    // A. Prepare the data (Filter out large images and format fields)
     const dataToExport = registrations.map(reg => ({
-      'Batch Code': reg.batchCode || 'PENDING',
+      // --- ADDED REG NO AS FIRST COLUMN ---
+      'Registration No': reg.registrationNo || 'PENDING',
+      'Batch Code': reg.batchCode || 'PENDING', 
       'Full Name': reg.fullName,
-      'Parent Name': reg.parentName,
       'College Name': reg.collegeName,
       'Branch': reg.branch,
       'Semester': reg.yearSemester,
@@ -58,14 +101,9 @@ export default function PolytechnicAdminDashboard() {
       'Registration Date': reg.declarationDate,
     }));
 
-    // B. Create a new Worksheet
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-
-    // C. Create a new Workbook and append the worksheet
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Registrations");
-
-    // D. Generate Excel file and trigger download
     XLSX.writeFile(workbook, `CIA_Registrations_${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
@@ -73,7 +111,8 @@ export default function PolytechnicAdminDashboard() {
   const filteredData = registrations.filter((reg) => 
     (reg.fullName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
     (reg.collegeName?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
-    (reg.batchCode?.toLowerCase() || '').includes(searchTerm.toLowerCase())
+    (reg.batchCode?.toLowerCase() || '').includes(searchTerm.toLowerCase()) ||
+    (reg.registrationNo?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   );
 
   // 4. STATS
@@ -105,7 +144,6 @@ export default function PolytechnicAdminDashboard() {
             <p className="text-slate-500 text-sm mt-1">Management portal for Cybersecurity & Industrial Internship Program.</p>
           </div>
           <div className="flex gap-3">
-             {/* UPDATED EXPORT BUTTON */}
              <button 
                onClick={handleExportExcel}
                className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 border border-slate-700 transition-all hover:border-emerald-500/50"
@@ -134,7 +172,7 @@ export default function PolytechnicAdminDashboard() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" size={18} />
               <input 
                 type="text" 
-                placeholder="Search students, colleges, or ID..." 
+                placeholder="Search Reg No, students, colleges..." 
                 className="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-emerald-500 transition-colors"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -146,7 +184,7 @@ export default function PolytechnicAdminDashboard() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-950/50 text-slate-500 uppercase text-[10px] font-bold tracking-widest border-b border-slate-800">
-                  <th className="px-6 py-4">Student & ID</th>
+                  <th className="px-6 py-4">Student Details</th>
                   <th className="px-6 py-4">Polytechnic College</th>
                   <th className="px-6 py-4">Branch / Sem</th>
                   <th className="px-6 py-4">Payment</th>
@@ -161,7 +199,7 @@ export default function PolytechnicAdminDashboard() {
                     <tr key={reg.id} className="hover:bg-emerald-500/5 transition-colors group">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 text-emerald-500 font-bold text-xs uppercase overflow-hidden">
+                          <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center border border-slate-700 text-emerald-500 font-bold text-xs uppercase overflow-hidden shrink-0">
                              {reg.photoBase64 ? (
                                <img src={reg.photoBase64} alt="Thumb" className="w-full h-full object-cover" />
                              ) : (
@@ -170,9 +208,16 @@ export default function PolytechnicAdminDashboard() {
                           </div>
                           <div>
                             <p className="text-sm font-bold text-white">{reg.fullName}</p>
-                            <p className="text-[10px] text-emerald-400 font-mono tracking-tighter">
-                              {reg.batchCode || 'Processing...'}
-                            </p>
+                            <div className="flex flex-col">
+                              {/* --- REG NO DISPLAY --- */}
+                              <span className="text-[10px] text-slate-400 font-mono">
+                                ID: {reg.registrationNo || 'N/A'}
+                              </span>
+                              {/* --- BATCH CODE DISPLAY --- */}
+                              <span className={`text-[10px] font-mono tracking-tighter ${reg.batchCode ? 'text-emerald-400' : 'text-amber-500/80'}`}>
+                                {reg.batchCode || 'NO BATCH'}
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -189,7 +234,7 @@ export default function PolytechnicAdminDashboard() {
                             {reg.paymentMode}
                           </span>
                           <span className="text-[9px] text-slate-500 px-1 font-mono">
-                            ₹{reg.feeAmount} ({reg.installmentType})
+                            ₹{reg.feeAmount}
                           </span>
                         </div>
                       </td>
@@ -226,7 +271,7 @@ export default function PolytechnicAdminDashboard() {
             {/* Modal Header */}
             <div className="sticky top-0 z-10 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-6 py-4 flex justify-between items-center">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full border-2 border-emerald-500 overflow-hidden bg-slate-800">
+                <div className="w-12 h-12 rounded-full border-2 border-emerald-500 overflow-hidden bg-slate-800 shrink-0">
                   {selectedStudent.photoBase64 ? (
                     <img src={selectedStudent.photoBase64} alt="Profile" className="w-full h-full object-cover" />
                   ) : (
@@ -235,12 +280,72 @@ export default function PolytechnicAdminDashboard() {
                     </div>
                   )}
                 </div>
-                <div>
+                
+                {/* --- EDITABLE ADMIN SECTION (REG NO + BATCH) --- */}
+                <div className="flex-1">
                   <h2 className="text-xl font-bold text-white">{selectedStudent.fullName}</h2>
-                  <p className="text-emerald-400 font-mono text-xs tracking-wider">
-                    {selectedStudent.batchCode || 'BATCH CODE PENDING'}
-                  </p>
+                  
+                  {isEditing ? (
+                    <div className="flex flex-col sm:flex-row gap-2 mt-2 p-2 bg-slate-800/50 rounded-lg border border-slate-700">
+                      <div className="flex flex-col">
+                        <label className="text-[9px] text-slate-400 uppercase font-bold">Registration No</label>
+                        <input 
+                          type="text" 
+                          value={editForm.registrationNo}
+                          onChange={(e) => setEditForm({...editForm, registrationNo: e.target.value})}
+                          placeholder="e.g. CIA-2024-001"
+                          className="bg-slate-950 border border-slate-600 text-white text-xs px-2 py-1 rounded focus:outline-none focus:border-emerald-500 w-32"
+                          autoFocus
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <label className="text-[9px] text-slate-400 uppercase font-bold">Batch Code</label>
+                        <input 
+                          type="text" 
+                          value={editForm.batchCode}
+                          onChange={(e) => setEditForm({...editForm, batchCode: e.target.value})}
+                          placeholder="e.g. JUNE-B1"
+                          className="bg-slate-950 border border-slate-600 text-white text-xs px-2 py-1 rounded focus:outline-none focus:border-emerald-500 w-32"
+                        />
+                      </div>
+                      <div className="flex items-end gap-1">
+                        <button 
+                          onClick={handleSaveDetails}
+                          className="p-1.5 bg-emerald-600 hover:bg-emerald-500 rounded text-white mb-0.5"
+                          title="Save Details"
+                        >
+                          <Save size={14} />
+                        </button>
+                        <button 
+                          onClick={() => setIsEditing(false)}
+                          className="p-1.5 bg-slate-700 hover:bg-slate-600 rounded text-slate-300 mb-0.5"
+                          title="Cancel"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex flex-wrap items-center gap-3 mt-1 group cursor-pointer" onClick={() => setIsEditing(true)}>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Reg No:</span>
+                        <span className={`font-mono text-sm ${selectedStudent.registrationNo ? 'text-white' : 'text-slate-500 italic'}`}>
+                          {selectedStudent.registrationNo || 'N/A'}
+                        </span>
+                      </div>
+                      <div className="w-px h-3 bg-slate-700"></div>
+                      <div className="flex items-center gap-2">
+                         <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Batch:</span>
+                         <span className={`font-mono text-xs tracking-wider px-1.5 py-0.5 rounded ${selectedStudent.batchCode ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'text-amber-500 italic'}`}>
+                           {selectedStudent.batchCode || 'PENDING'}
+                         </span>
+                      </div>
+                      <Edit2 size={12} className="text-slate-600 group-hover:text-emerald-500 transition-colors ml-1" />
+                    </div>
+                  )}
                 </div>
+                {/* --- END EDITABLE SECTION --- */}
+
               </div>
               <button 
                 onClick={() => setSelectedStudent(null)}
@@ -308,9 +413,9 @@ export default function PolytechnicAdminDashboard() {
                       <span className="text-slate-300">{selectedStudent.paymentDate}</span>
                     </div>
                     <div className="pt-2 border-t border-slate-800 mt-2">
-                       <span className="inline-block w-full text-center py-1 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold uppercase">
-                         {selectedStudent.installmentType} Payment
-                       </span>
+                        <span className="inline-block w-full text-center py-1 bg-emerald-500/10 border border-emerald-500/20 rounded text-emerald-400 text-xs font-bold uppercase">
+                          {selectedStudent.installmentType} Payment
+                        </span>
                     </div>
                   </div>
                 </div>
