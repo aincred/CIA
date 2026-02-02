@@ -4,7 +4,7 @@ import { jwtVerify } from 'jose';
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET || 'your-super-secret-key-32-chars-long');
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   // 1. Check if the user is trying to access admin routes
   if (req.nextUrl.pathname.startsWith('/admin')) {
     
@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     const token = req.cookies.get('admin_token')?.value;
 
     if (!token) {
-      return NextResponse.redirect(new URL('/login', req.url));
+      return NextResponse.redirect(new URL('/admin-login', req.url));
     }
 
     try {
@@ -21,7 +21,7 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     } catch (err) {
       // Token is fake or expired
-      return NextResponse.redirect(new URL('/login', req.url));
+      return NextResponse.redirect(new URL('/admin-login', req.url));
     }
   }
 

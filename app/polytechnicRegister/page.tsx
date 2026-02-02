@@ -992,7 +992,7 @@ export default function RegistrationForm() {
             </p>
             <div className="flex items-center justify-center gap-2 text-white bg-slate-800 py-2 rounded border border-slate-700 print:bg-white print:border-gray-300 print:text-black">
                <Phone size={16} className="text-emerald-500 print:text-black" />
-               <span className="font-mono tracking-wide">Helpdesk: 834012248</span>
+               <span className="font-mono tracking-wide">Helpdesk:  8252866584</span>
             </div>
           </div>
 
