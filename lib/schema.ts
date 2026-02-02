@@ -38,10 +38,11 @@ export const admins = pgTable('admins', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+// --- UPDATED REGISTRATIONS TABLE ---
 export const registrations = pgTable('registrations', {
   id: serial('id').primaryKey(),
   
-  // Personal Details
+  // 1. Personal Details
   fullName: text('full_name').notNull(),
   parentName: text('parent_name').notNull(),
   dob: text('dob').notNull(),
@@ -52,11 +53,22 @@ export const registrations = pgTable('registrations', {
   email: text('email').notNull(),
   address: text('address').notNull(),
 
-  // Files (Stored as Base64 Text)
+  // 2. Main File Uploads (Base64)
   photoBase64: text('photo_base64'),
   signatureBase64: text('signature_base64'),
+  
+  // 3. Document File Uploads (Base64) - Matches your Form Logic
+  aadhaarBase64: text('aadhaar_base64'),
+  collegeIdBase64: text('college_id_base64'),
+  nocBase64: text('noc_base64'),
 
-  // Academic Details
+  // 4. Checklist Booleans - Matches "checkAadhaar" in your Form
+  checkAadhaar: boolean('check_aadhaar').default(false),
+  checkCollegeId: boolean('check_college_id').default(false),
+  checkNoc: boolean('check_noc').default(false),
+  checkPhoto: boolean('check_photo').default(false),
+
+  // 5. Academic Details
   collegeName: text('college_name').notNull(),
   branch: text('branch').notNull(),
   yearSemester: text('year_semester').notNull(),
@@ -64,27 +76,13 @@ export const registrations = pgTable('registrations', {
   collegeIdNo: text('college_id_no').notNull(),
   cgpa: text('cgpa').notNull(),
 
-  // Document Checklist (Booleans)
-  docAadhaar: boolean('doc_aadhaar').default(false),
-  docCollegeId: boolean('doc_college_id').default(false),
-  docNoc: boolean('doc_noc').default(false),
-  docPhoto: boolean('doc_photo').default(false),
-  docPayment: boolean('doc_payment').default(false),
-
-  // Payment Details (Nullable)
-  feeAmount: text('fee_amount'),
-  installmentType: text('installment_type'),
-  paymentMode: text('payment_mode'),
-  transactionId: text('transaction_id'),
-  paymentDate: text('payment_date'),
-
-  // Declaration & Admin Codes
+  // 6. Declaration & System Info
   agreedToTerms: boolean('agreed_to_terms').default(false),
   declarationDate: text('declaration_date'),
   
-  // Generated Codes (Nullable initially, filled after insert)
+  // Generated Codes
   batchCode: text('batch_code'),
-  registrationNo: text('registration_no'), // <--- THIS WAS MISSING
+  registrationNo: text('registration_no'),
   
   createdAt: timestamp('created_at').defaultNow(),
 });
