@@ -2619,7 +2619,7 @@ export default function RegistrationForm() {
           <div className="inline-block bg-slate-800/50 border border-slate-700 rounded-full px-4 py-1 text-sm text-slate-300 mt-4">
             <span className="text-emerald-500 mr-2">●</span>
             {/* UPDATED DATE HERE */}
-            Internship Date: 12/02/2026 – 12/03/2026
+            Internship Date: 12/02/2026 – 12/06/2026
           </div>
         </div>
       </header>
